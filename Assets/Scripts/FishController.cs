@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
-using TMPro;
 
 public class FishController : MonoBehaviour
 {
@@ -93,7 +91,7 @@ public class FishController : MonoBehaviour
                 HandleFleeing();
                 break;
             case AIState.Baited:
-                HandleBaited();
+                //HandleBaited(put bait target var from player click here);
                 break;
             case AIState.Eating:
                 HandleEating();
@@ -114,7 +112,7 @@ public class FishController : MonoBehaviour
         if (timer <= 0)
         {
             // Reset timer for idle
-            timer = idleDuration;
+            timer = idleDuration + Random.Range(-1,1);
             FindRoamDestinationAndGo();
         }
 
@@ -157,24 +155,22 @@ public class FishController : MonoBehaviour
         SmoothRotateTowardsDestination();
     }
 
-    void HandleBaited()
+    void HandleBaited(Vector3 baitTarget)
     {
         if (navMeshAgent.enabled)
         {
-            navMeshAgent.SetDestination(fleeTarget); // Set the flee target position
+            navMeshAgent.SetDestination(baitTarget); // Set the flee target position
             Debug.Log("AI is baited.");
 
             // Adjust speed based on remaining time
             navMeshAgent.speed = baitedSpeed;
         }
 
-        // Transition back to Idle after a certain time
-        timer -= Time.deltaTime;
-        if (timer <= 0)
+        // Transition back to Idle after you reach bait target
+
+        if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance < 0.5f)
         {
             currentState = AIState.Idle;
-            timer = idleDuration;
-            navMeshAgent.ResetPath(); // Stop moving
         }
 
         SmoothRotateTowardsDestination();
