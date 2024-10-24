@@ -30,6 +30,7 @@ public class FishController : MonoBehaviour
     [SerializeField] private float minFleeDistance = 2f;
     [SerializeField] private float maxFleeDistance = 15f;
 
+    public bool CanBeBaited { get; set; }
     [Header("Baited Settings")]
     [SerializeField] private float baitedDuration = 2f;
     [SerializeField] private float baitedSpeed = 10f;
@@ -61,6 +62,7 @@ public class FishController : MonoBehaviour
 
         mc = GameObject.Find("MouseManager").GetComponent<MouseController>();
         fleeDistanceThreshold = mc.radius;
+        CanBeBaited = false;
         swapButton = GameObject.Find("Swap Button");
         // set up button using textmeshpro
         swapButton.GetComponentInChildren<TextMeshProUGUI>().text = "Scare";
@@ -89,7 +91,7 @@ public class FishController : MonoBehaviour
                 HandleFleeing();
                 break;
             case AIState.Baited:
-                //HandleBaited(put bait target var from player click here);
+                HandleBaited(fleeTarget);
                 break;
             case AIState.Eating:
                 HandleEating();
@@ -164,11 +166,11 @@ public class FishController : MonoBehaviour
             navMeshAgent.speed = baitedSpeed;
         }
 
-        // Transition back to Idle after you reach bait target
+        // Transition to Eating after you reach bait target
 
         if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance < 0.5f)
         {
-            currentState = AIState.Idle;
+            currentState = AIState.Eating;
         }
 
         SmoothRotateTowardsDestination();
@@ -177,6 +179,7 @@ public class FishController : MonoBehaviour
     void HandleEating()
     {
         Debug.Log("AI is eating.");
+        currentState = AIState.Idle;
     }
 
     void HandleEntering()
@@ -225,7 +228,7 @@ public class FishController : MonoBehaviour
             }
             else
             {
-                if (distance <= baitedDistance)
+                if (distance <= baitedDistance && CanBeBaited == true)
                 {
                     fleeTarget = clickPosition; // Set the bait position
 

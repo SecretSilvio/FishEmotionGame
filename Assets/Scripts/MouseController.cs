@@ -14,6 +14,7 @@ public class MouseController : MonoBehaviour
     public GameObject fishPrefab;
     public int dotsCount = 20; // Number of dots in the line
     public float dotSpacing = 0.1f; // Spacing between dots
+    private GameObject lastFish; // Track the last fish that was baited
 
     private LineRenderer lineRenderer;
 
@@ -57,7 +58,7 @@ public class MouseController : MonoBehaviour
         }
         else
         {
-            DrawDottedLine();
+            DrawBait();
         }
 
     }
@@ -79,7 +80,7 @@ public class MouseController : MonoBehaviour
         }
     }
 
-    void DrawDottedLine()
+    void DrawBait()
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0; // Set Z to 0 for 2D
@@ -89,6 +90,20 @@ public class MouseController : MonoBehaviour
 
         if (nearestFish != null)
         {
+            FishController fishController = nearestFish.GetComponent<FishController>();
+            if (fishController != null)
+            {
+                // If a new fish is found, turn off CanBeBaited for the last fish
+                if (lastFish != nearestFish)
+                {
+                    ToggleCanBeBaited(lastFish, false); // Turn off last fish
+                    lastFish = nearestFish; // Update last fish
+                }
+
+                // Turn on CanBeBaited for the current nearest fish
+                ToggleCanBeBaited(nearestFish, true);
+            }
+
             // Draw the dotted line
             DrawDottedLine(mousePos, nearestFish.transform.position);
         }
@@ -130,6 +145,18 @@ public class MouseController : MonoBehaviour
             float t = (float)i / dotsToDraw;
             Vector3 point = start + direction * t * distance;
             lineRenderer.SetPosition(i, point);
+        }
+    }
+
+    void ToggleCanBeBaited(GameObject fish, bool value)
+    {
+        if (fish != null)
+        {
+            FishController fishController = fish.GetComponent<FishController>();
+            if (fishController != null)
+            {
+                fishController.CanBeBaited = value; // Set the CanBeBaited property
+            }
         }
     }
 

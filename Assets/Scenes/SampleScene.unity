@@ -1433,6 +1433,10 @@ MonoBehaviour:
   radius: 5
   segments: 36
   ringColor: {r: 0, g: 1, b: 0, a: 1}
+  fishPrefab: {fileID: 0}
+  dotsCount: 20
+  dotSpacing: 1
+  currentAction: 1
 --- !u!120 &1444789476
 LineRenderer:
   serializedVersion: 2
