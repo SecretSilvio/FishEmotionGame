@@ -17,6 +17,16 @@ public class MouseController : MonoBehaviour
 
     private LineRenderer lineRenderer;
 
+    // Settings for toggling current player action
+    public PlayerActions currentAction = PlayerActions.Scare;
+    public enum PlayerActions
+    {
+        Bait,
+        Scare,
+    }
+
+    
+
     void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
@@ -29,13 +39,32 @@ public class MouseController : MonoBehaviour
 
     void Update()
     {
-        DrawRing();
-        DrawDottedLine();
-        
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (currentAction == PlayerActions.Scare)
+            {
+                currentAction = PlayerActions.Bait;
+            }
+            else
+            {
+                currentAction = PlayerActions.Scare;
+            }
+        }
+
+        if (currentAction == PlayerActions.Scare)
+        {
+            DrawRing();
+        }
+        else
+        {
+            DrawDottedLine();
+        }
+
     }
 
     void DrawRing()
     {
+        lineRenderer.positionCount = segments + 1;
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = 0;
         Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePos);

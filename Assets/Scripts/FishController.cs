@@ -6,7 +6,6 @@ public class FishController : MonoBehaviour
 {
     [Header("AI Settings")]
     public AIState currentState = AIState.Idle;
-    public PlayerActions currentAction = PlayerActions.Scare;
 
     public enum AIState
     {
@@ -17,12 +16,6 @@ public class FishController : MonoBehaviour
         Eating,
         Entering,
         Exiting
-    }
-
-    public enum PlayerActions
-    {
-        Bait,
-        Scare,
     }
 
     [Header("Roaming Settings")]
@@ -49,6 +42,7 @@ public class FishController : MonoBehaviour
     [SerializeField] private GameObject swapButton;
     [SerializeField] private GameObject circle;
     [SerializeField] private MouseController mc;
+    [SerializeField] private bool inScareMode;
 
     private float timer;
     private Vector3 roamDestination;
@@ -76,6 +70,7 @@ public class FishController : MonoBehaviour
 
     void Update()
     {
+        CheckForModeSwitch();
         CheckForPlayerClick();
         HandleState();
     }
@@ -194,6 +189,18 @@ public class FishController : MonoBehaviour
         Debug.Log("AI is exiting.");
     }
 
+    void CheckForModeSwitch()
+    {
+        if (mc.currentAction == MouseController.PlayerActions.Scare)
+        {
+            inScareMode = true;
+        }
+        else
+        {
+            inScareMode = false;
+        }
+    }
+
     void CheckForPlayerClick()
     {
         if (Input.GetMouseButtonDown(0))
@@ -203,33 +210,33 @@ public class FishController : MonoBehaviour
 
             float distance = Vector3.Distance(transform.position, clickPosition);
 
-            switch (currentAction)
+            if (inScareMode)
             {
-                case PlayerActions.Scare:
-                    if (distance <= fleeDistanceThreshold)
-                    {
-                        float fleeDistance = Mathf.Lerp(maxFleeDistance, minFleeDistance, distance / fleeDistanceThreshold);
-                        fleeTarget = transform.position + (transform.position - clickPosition).normalized * (fleeDistance); // Calculate a flee position
+                if (distance <= fleeDistanceThreshold)
+                {
+                    float fleeDistance = Mathf.Lerp(maxFleeDistance, minFleeDistance, distance / fleeDistanceThreshold);
+                    fleeTarget = transform.position + (transform.position - clickPosition).normalized * (fleeDistance); // Calculate a flee position
 
-                        // Set timer based on distance from click position
-                        timer = Mathf.Clamp(2f - distance / 2, 0.5f, 2f); // Adjust as needed for timing
+                    // Set timer based on distance from click position
+                    timer = Mathf.Clamp(2f - distance / 2, 0.5f, 2f); // Adjust as needed for timing
 
-                        currentState = AIState.Fleeing; // Change to fleeing state
-                    }
-                    break;
-
-                case PlayerActions.Bait:
-                    if (distance <= baitedDistance)
-                    {
-                        fleeTarget = clickPosition; // Set the bait position
-
-                        // Set timer for baited duration
-                        timer = baitedDuration;
-
-                        currentState = AIState.Baited; // Change to baited state
-                    }
-                    break;
+                    currentState = AIState.Fleeing; // Change to fleeing state
+                }
             }
+            else
+            {
+                if (distance <= baitedDistance)
+                {
+                    fleeTarget = clickPosition; // Set the bait position
+
+                    // Set timer for baited duration
+                    timer = baitedDuration;
+
+                    currentState = AIState.Baited; // Change to baited state
+                }
+
+            }
+
         }
     }
 
@@ -267,21 +274,6 @@ public class FishController : MonoBehaviour
 
         // Apply the smooth rotation to the fish's transform
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, smoothAngle));
-    }
-
-    public void SwapButton()
-    {
-        switch (currentAction)
-        {
-            case PlayerActions.Scare:
-                currentAction = PlayerActions.Bait;
-                swapButton.GetComponentInChildren<TextMeshProUGUI>().text = "Bait";
-                break;
-            case PlayerActions.Bait:
-                currentAction = PlayerActions.Scare;
-                swapButton.GetComponentInChildren<TextMeshProUGUI>().text = "Scare";
-                break;
-        }
     }
 
     public void EnterCircle()
