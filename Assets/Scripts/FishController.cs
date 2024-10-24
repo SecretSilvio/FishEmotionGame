@@ -33,7 +33,7 @@ public class FishController : MonoBehaviour
     [Header("Fleeing Settings")]
     [SerializeField] private float minFleeSpeed = 2f;
     [SerializeField] private float maxFleeSpeed = 10f;
-    [SerializeField] private float fleeDistanceThreshold = 10f;
+    [SerializeField] private float fleeDistanceThreshold;
     [SerializeField] private float minFleeDistance = 2f;
     [SerializeField] private float maxFleeDistance = 15f;
 
@@ -48,6 +48,7 @@ public class FishController : MonoBehaviour
     [SerializeField] private GameManager gameManager;
     [SerializeField] private GameObject swapButton;
     [SerializeField] private GameObject circle;
+    [SerializeField] private MouseController mc;
 
     private float timer;
     private Vector3 roamDestination;
@@ -64,6 +65,8 @@ public class FishController : MonoBehaviour
         timer = idleDuration;
         navMeshAgent.speed = 3.5f; // Adjust speed as needed
 
+        mc = GameObject.Find("MouseManager").GetComponent<MouseController>();
+        fleeDistanceThreshold = mc.radius;
         swapButton = GameObject.Find("Swap Button");
         // set up button using textmeshpro
         swapButton.GetComponentInChildren<TextMeshProUGUI>().text = "Scare";

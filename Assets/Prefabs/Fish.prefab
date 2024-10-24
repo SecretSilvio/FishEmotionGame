@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 766542691082168200}
   m_Layer: 0
   m_Name: Fish
-  m_TagString: Untagged
+  m_TagString: Fish
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -129,7 +129,7 @@ MonoBehaviour:
   minFleeSpeed: 2
   maxFleeSpeed: 10
   fleeDistanceThreshold: 10
-  minFleeDistance: 2
+  minFleeDistance: 4
   maxFleeDistance: 15
   baitedDuration: 2
   baitedSpeed: 10
@@ -138,6 +138,7 @@ MonoBehaviour:
   gameManager: {fileID: 0}
   swapButton: {fileID: 0}
   circle: {fileID: 0}
+  mc: {fileID: 0}
 --- !u!1 &5630063584183339803
 GameObject:
   m_ObjectHideFlags: 0

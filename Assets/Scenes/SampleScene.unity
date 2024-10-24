@@ -1430,7 +1430,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5da2e5032e52b54aa0de7d82310c4ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 10
+  radius: 5
   segments: 36
   ringColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!120 &1444789476
@@ -1454,7 +1454,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1472,9 +1472,9 @@ LineRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 10
+  m_SortingLayerID: -1479027673
+  m_SortingLayer: 1
+  m_SortingOrder: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 1}
@@ -2191,6 +2191,7 @@ SceneRoots:
   - {fileID: 1309903649}
   - {fileID: 50452658}
   - {fileID: 213075623}
+  - {fileID: 1444789477}
   - {fileID: 506803534}
   - {fileID: 949718613}
   - {fileID: 785117400}
@@ -2203,4 +2204,3 @@ SceneRoots:
   - {fileID: 1019130313}
   - {fileID: 927680168}
   - {fileID: 1643768397}
-  - {fileID: 1444789477}
