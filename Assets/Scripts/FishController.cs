@@ -91,7 +91,7 @@ public class FishController : MonoBehaviour
                 HandleFleeing();
                 break;
             case AIState.Baited:
-                HandleBaited(fleeTarget);
+                HandleBaited();
                 break;
             case AIState.Eating:
                 HandleEating();
@@ -155,15 +155,14 @@ public class FishController : MonoBehaviour
         SmoothRotateTowardsDestination();
     }
 
-    void HandleBaited(Vector3 baitTarget)
+    void HandleBaited()
     {
         if (navMeshAgent.enabled)
         {
-            navMeshAgent.SetDestination(baitTarget); // Set the flee target position
+            navMeshAgent.SetDestination(fleeTarget); // Set the flee target position
             Debug.Log("AI is baited.");
 
             // Adjust speed based on remaining time
-            navMeshAgent.speed = baitedSpeed;
         }
 
         // Transition to Eating after you reach bait target
