@@ -112,7 +112,7 @@ public class FishController : MonoBehaviour
         if (timer <= 0)
         {
             // Reset timer for idle
-            timer = idleDuration + Random.Range(-1,1);
+            timer = idleDuration + Random.Range(-2,2);
             FindRoamDestinationAndGo();
         }
 
@@ -216,7 +216,7 @@ public class FishController : MonoBehaviour
             {
                 if (distance <= fleeDistanceThreshold)
                 {
-                    float fleeDistance = Mathf.Lerp(maxFleeDistance, minFleeDistance, distance / fleeDistanceThreshold);
+                    float fleeDistance = Mathf.Lerp(maxFleeDistance, minFleeDistance, distance / fleeDistanceThreshold + 3);
                     fleeTarget = transform.position + (transform.position - clickPosition).normalized * (fleeDistance); // Calculate a flee position
 
                     // Set timer based on distance from click position
@@ -244,7 +244,7 @@ public class FishController : MonoBehaviour
 
     void FindRoamDestinationAndGo()
     {
-        Vector2 randomDirection = Random.insideUnitCircle * moveRadius;
+        Vector2 randomDirection = new Vector2(this.transform.position.x, this.transform.position.y) + (Random.insideUnitCircle * moveRadius);
         roamDestination = new Vector3(randomDirection.x, randomDirection.y, 0);
 
         NavMeshHit hit;

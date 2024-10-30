@@ -29,8 +29,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8865885436276499000}
   m_Father: {fileID: 0}
@@ -97,7 +97,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 2
+  m_Speed: 1
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -122,10 +122,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: 0
-  currentAction: 1
   idleDuration: 3
-  moveRadius: 4
-  rotationSpeed: 400
+  moveRadius: 5
+  rotationSpeed: 200
   minFleeSpeed: 2
   maxFleeSpeed: 10
   fleeDistanceThreshold: 10
@@ -139,6 +138,7 @@ MonoBehaviour:
   swapButton: {fileID: 0}
   circle: {fileID: 0}
   mc: {fileID: 0}
+  inScareMode: 0
 --- !u!1 &5630063584183339803
 GameObject:
   m_ObjectHideFlags: 0
