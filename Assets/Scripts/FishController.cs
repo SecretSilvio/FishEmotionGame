@@ -122,6 +122,7 @@ public class FishController : MonoBehaviour
 
     void HandleRoaming()
     {
+        navMeshAgent.speed = startingSpeed;
         SmoothRotateTowardsDestination();
         if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance < 0.5f)
         {

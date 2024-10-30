@@ -6,11 +6,12 @@ TagManager:
   tags:
   - Circle
   - Fish
+  - Kill
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - PostProcessing
   - Water
   - UI
   - 
