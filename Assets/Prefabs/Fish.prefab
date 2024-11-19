@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1312926486785187495}
+  - component: {fileID: 766542691082168200}
   - component: {fileID: 3808191581348125958}
   - component: {fileID: 2247081651973216763}
-  - component: {fileID: 766542691082168200}
+  - component: {fileID: 5858442460196237991}
   m_Layer: 0
   m_Name: Fish
   m_TagString: Fish
@@ -35,6 +36,36 @@ Transform:
   - {fileID: 8865885436276499000}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &766542691082168200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5457005835813499790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ec7972e1b976bc45a3e4d8cb1bee548, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentState: 0
+  idleDuration: 3
+  moveRadius: 5
+  rotationSpeed: 200
+  minFleeSpeed: 2
+  maxFleeSpeed: 10
+  fleeDistanceThreshold: 10
+  minFleeDistance: 4
+  maxFleeDistance: 15
+  baitedDuration: 2
+  baitedSpeed: 10
+  baitedDistance: 5
+  startingSpeed: 0
+  gameManager: {fileID: 0}
+  fishSpawner: {fileID: 0}
+  circle: {fileID: 0}
+  mc: {fileID: 0}
+  inScareMode: 0
 --- !u!212 &3808191581348125958
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -109,36 +140,27 @@ NavMeshAgent:
   m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &766542691082168200
-MonoBehaviour:
+--- !u!65 &5858442460196237991
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5457005835813499790}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ec7972e1b976bc45a3e4d8cb1bee548, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentState: 0
-  idleDuration: 3
-  moveRadius: 5
-  rotationSpeed: 200
-  minFleeSpeed: 2
-  maxFleeSpeed: 10
-  fleeDistanceThreshold: 10
-  minFleeDistance: 4
-  maxFleeDistance: 15
-  baitedDuration: 2
-  baitedSpeed: 10
-  baitedDistance: 5
-  startingSpeed: 0
-  gameManager: {fileID: 0}
-  swapButton: {fileID: 0}
-  circle: {fileID: 0}
-  mc: {fileID: 0}
-  inScareMode: 0
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5630063584183339803
 GameObject:
   m_ObjectHideFlags: 0

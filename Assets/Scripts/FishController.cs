@@ -40,7 +40,7 @@ public class FishController : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private GameManager gameManager;
-    [SerializeField] private GameObject swapButton;
+    [SerializeField] private FishSpawner fishSpawner;
     [SerializeField] private GameObject circle;
     [SerializeField] private MouseController mc;
     [SerializeField] private bool inScareMode;
@@ -63,11 +63,10 @@ public class FishController : MonoBehaviour
         mc = GameObject.Find("MouseManager").GetComponent<MouseController>();
         fleeDistanceThreshold = mc.radius;
         CanBeBaited = false;
-        swapButton = GameObject.Find("Swap Button");
         // set up button using textmeshpro
-        swapButton.GetComponentInChildren<TextMeshProUGUI>().text = "Scare";
         circle = GameObject.Find("Circle");
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        fishSpawner = GameObject.Find("Spawner").GetComponent<FishSpawner>();
     }
 
     void Update()
@@ -282,13 +281,11 @@ public class FishController : MonoBehaviour
     public void EnterCircle()
     {
         currentState = AIState.Entering;
-        gameManager.startAddingScore();
     }
 
     public void ExitCircle()
     {
         currentState = AIState.Exiting;
-        gameManager.stopAddingScore();
     }
 
     public void OnTriggerEnter(Collider other)
@@ -297,6 +294,12 @@ public class FishController : MonoBehaviour
         {
             EnterCircle();
             Debug.Log("Fish Entered Circle!");
+        }
+        if (other.gameObject.CompareTag("Kill"))
+        {
+            fishSpawner.fishDied();
+            Destroy(gameObject);
+            Debug.Log("Fish Killed!");
         }
     }
 }
