@@ -464,9 +464,9 @@ MonoBehaviour:
   minSize: 2
   maxSize: 6
   speed: 1
-  visibleDuration: 6
+  visibleDuration: 2
   goneDuration: 1
-  fadeDuration: 1
+  fadeDuration: 6
   circleColor: {r: 0.3820755, g: 0.59044236, b: 1, a: 1}
 --- !u!1 &458682477
 GameObject:
