@@ -8,8 +8,21 @@ public class BGSounds : MonoBehaviour
     public float minInterval = 2f; // Minimum time between plays
     public float maxInterval = 10f; // Maximum time between plays
 
+    private BGSounds instance;
+
     private void Start()
     {
+        // Singleton pattern
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+        
         if (audioSources.Length > 0)
         {
             StartCoroutine(PlayRandomAudioAtIntervals());

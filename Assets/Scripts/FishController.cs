@@ -64,6 +64,8 @@ public class FishController : MonoBehaviour
 
     private NavMeshAgent navMeshAgent;
 
+    private bool playing = false;
+
     private void Start()
     {
         currentState = AIState.Spawn;
@@ -179,7 +181,7 @@ public class FishController : MonoBehaviour
                 timer = idleDuration + Random.Range(-2, 2);
                 currentState = AIState.Idle;
             }
-            
+                
         }
 
         SmoothRotateTowardsDestination();
