@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,13 +10,15 @@ public class FishController : MonoBehaviour
 
     public enum AIState
     {
+        Spawn,
         Idle,
         Roaming,
         Fleeing,
         Baited,
         Eating,
         Entering,
-        Exiting
+        Exiting,
+        Following
     }
 
     [Header("Roaming Settings")]
@@ -36,11 +39,18 @@ public class FishController : MonoBehaviour
     [SerializeField] private float baitedSpeed = 10f;
     [SerializeField] private float baitedDistance = 5f;
 
+    [Header("Follow Settings")]
+    [SerializeField] private float hookDistance = 2f;
+    [SerializeField] private float maxFollowDistance = 7f;
+    [SerializeField] private Vector3 cursorPosition;
+    [SerializeField] private float forgetTimer = 1f;
+
     [SerializeField] private float startingSpeed;
 
     [Header("References")]
     [SerializeField] private GameManager gameManager;
     [SerializeField] private FishSpawner fishSpawner;
+    [SerializeField] private Camera mainCamera;
     [SerializeField] private GameObject circle;
     [SerializeField] private MouseController mc;
     [SerializeField] private bool inScareMode;
@@ -53,12 +63,13 @@ public class FishController : MonoBehaviour
 
     private void Start()
     {
+        currentState = AIState.Spawn;
         navMeshAgent = GetComponent<NavMeshAgent>();
         navMeshAgent.updateRotation = false;
         navMeshAgent.updateUpAxis = false;
         startingSpeed = navMeshAgent.speed;
         timer = idleDuration;
-        navMeshAgent.speed = 3.5f; // Adjust speed as needed
+        navMeshAgent.speed = startingSpeed; // Adjust speed as needed
 
         mc = GameObject.Find("MouseManager").GetComponent<MouseController>();
         fleeDistanceThreshold = mc.radius;
@@ -67,19 +78,36 @@ public class FishController : MonoBehaviour
         circle = GameObject.Find("Circle");
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         fishSpawner = GameObject.Find("Spawner").GetComponent<FishSpawner>();
+        mainCamera = Camera.main;
     }
 
     void Update()
-    {
+    { 
+        CheckMousePosition();
         CheckForModeSwitch();
         CheckForPlayerClick();
         HandleState();
     }
 
+    void CheckMousePosition()
+    {
+        cursorPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        cursorPosition.z = 0; // Ensure z-axis matches 2D plane
+
+        float distanceToCursor = Vector3.Distance(transform.position, cursorPosition);
+
+        if (distanceToCursor <= hookDistance && currentState != AIState.Fleeing && currentState != AIState.Baited)
+        {
+            currentState = AIState.Following;
+        }
+    }
     void HandleState()
     {
         switch (currentState)
         {
+            case AIState.Spawn:
+                HandleSpawn();
+                break;
             case AIState.Idle:
                 HandleIdle();
                 break;
@@ -100,12 +128,63 @@ public class FishController : MonoBehaviour
                 break;
             case AIState.Exiting:
                 HandleExiting();
-                break;    
+                break;
+            case AIState.Following:
+                HandleFollowing();
+                break;
         }
+    }
+    
+    void HandleSpawn()
+    {
+        if (navMeshAgent.enabled)
+        {
+            navMeshAgent.SetDestination(new Vector3 (0,0,0));
+            Debug.Log("AI spawned.");
+        }
+
+        timer -= Time.deltaTime;
+
+        if (timer <= 2)
+        {
+            // Reset timer for idle
+            timer = idleDuration + Random.Range(-2, 2);
+            currentState = AIState.Idle;
+        }
+
+        SmoothRotateTowardsDestination();
+
+    }
+
+    void HandleFollowing()
+    {
+        navMeshAgent.speed = 5;
+        float distanceToCursor = Vector3.Distance(transform.position, cursorPosition);
+
+        if (distanceToCursor <= maxFollowDistance) 
+        {
+            forgetTimer = 1f;
+            navMeshAgent.SetDestination(cursorPosition);
+        }
+        else
+        {
+            forgetTimer -= Time.deltaTime;
+            if (forgetTimer <= 0)
+            {
+                forgetTimer = 1f;
+                timer = idleDuration + Random.Range(-2, 2);
+                currentState = AIState.Idle;
+            }
+            
+        }
+
+        SmoothRotateTowardsDestination();
     }
 
     void HandleIdle()
     {
+        navMeshAgent.speed = startingSpeed;
+        navMeshAgent.ResetPath();
         timer -= Time.deltaTime;
 
         if (timer <= 0)
@@ -216,7 +295,8 @@ public class FishController : MonoBehaviour
             {
                 if (distance <= fleeDistanceThreshold)
                 {
-                    float fleeDistance = Mathf.Lerp(maxFleeDistance, minFleeDistance, distance / fleeDistanceThreshold + 3);
+                    float fleeDistance = Mathf.Lerp(maxFleeDistance, minFleeDistance, distance / fleeDistanceThreshold);
+                    fleeDistance += 1.5f;
                     fleeTarget = transform.position + (transform.position - clickPosition).normalized * (fleeDistance); // Calculate a flee position
 
                     // Set timer based on distance from click position
@@ -288,7 +368,7 @@ public class FishController : MonoBehaviour
         currentState = AIState.Exiting;
     }
 
-    public void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Circle"))
         {
