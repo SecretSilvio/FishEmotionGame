@@ -11,6 +11,9 @@ public class CircleController : MonoBehaviour
     public float goneDuration = 2.0f;
     public float fadeDuration = 1.0f;
     public Color circleColor = Color.blue;
+    public Color[] presetColors;
+    public Color fishColor;
+    public bool isReady;
     public AudioSource gong;
 
     private SpriteRenderer spriteRenderer;
@@ -22,6 +25,7 @@ public class CircleController : MonoBehaviour
 
     void Start()
     {
+        fishColor = presetColors[0];
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.color = circleColor;
         screenWidth = Camera.main.orthographicSize * Camera.main.aspect;
@@ -36,6 +40,7 @@ public class CircleController : MonoBehaviour
         switch (currentState)
         {
             case State.Visible:
+                isReady = true;
                 if (timer >= visibleDuration)
                 {
                     timer = 0.0f;
@@ -44,6 +49,7 @@ public class CircleController : MonoBehaviour
                 break;
 
             case State.Shrinking:
+                isReady = false;
                 float size = Mathf.Lerp(maxSize, minSize, timer / fadeDuration);
                 transform.localScale = new Vector3(size, size, 1);
                 float alpha = Mathf.Lerp(1, 0, timer / fadeDuration) * 0.75f; // Clamp alpha to 75%
@@ -74,6 +80,7 @@ public class CircleController : MonoBehaviour
                 break;
 
             case State.FadingIn:
+                isReady = false;
                 float fadeInSize = Mathf.Lerp(minSize, maxSize, timer / fadeDuration);
                 transform.localScale = new Vector3(fadeInSize, fadeInSize, 1);
                 float fadeInAlpha = Mathf.Lerp(0, 1, timer / fadeDuration) * 0.75f;
@@ -83,6 +90,9 @@ public class CircleController : MonoBehaviour
                 {
                     timer = 0.0f;
                     gong.Play();
+                    
+                    fishColor = presetColors[Random.Range(0, presetColors.Length)];
+
                     currentState = State.Visible;
                 }
                 break;

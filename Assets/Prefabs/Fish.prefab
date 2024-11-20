@@ -71,6 +71,7 @@ MonoBehaviour:
   mainCamera: {fileID: 0}
   circle: {fileID: 0}
   mc: {fileID: 0}
+  finSpriteRenderer: {fileID: 3851182260166881083}
   inScareMode: 0
 --- !u!212 &3808191581348125958
 SpriteRenderer:
@@ -133,7 +134,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 5457005835813499790}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.6
+  m_Radius: 0.8
   m_Speed: 2
   m_Acceleration: 8
   avoidancePriority: 50

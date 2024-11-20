@@ -1,3 +1,4 @@
+using System.Drawing;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -53,6 +54,8 @@ public class FishController : MonoBehaviour
     [SerializeField] private Camera mainCamera;
     [SerializeField] private GameObject circle;
     [SerializeField] private MouseController mc;
+    private SpriteRenderer spriteRenderer;
+    [SerializeField] SpriteRenderer finSpriteRenderer;
     [SerializeField] private bool inScareMode;
 
     private float timer;
@@ -78,6 +81,7 @@ public class FishController : MonoBehaviour
         circle = GameObject.Find("Circle");
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         fishSpawner = GameObject.Find("Spawner").GetComponent<FishSpawner>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         mainCamera = Camera.main;
     }
 
@@ -140,7 +144,7 @@ public class FishController : MonoBehaviour
         if (navMeshAgent.enabled)
         {
             navMeshAgent.SetDestination(new Vector3 (0,0,0));
-            Debug.Log("AI spawned.");
+            //Debug.Log("AI spawned.");
         }
 
         timer -= Time.deltaTime;
@@ -195,7 +199,7 @@ public class FishController : MonoBehaviour
         }
 
         // Logic for standing still
-        Debug.Log("AI is idle.");
+        //Debug.Log("AI is idle.");
     }
 
     void HandleRoaming()
@@ -206,7 +210,7 @@ public class FishController : MonoBehaviour
         {
             currentState = AIState.Idle;
         }
-       Debug.Log("AI is roaming.");
+       //Debug.Log("AI is roaming.");
         
     }
 
@@ -368,10 +372,16 @@ public class FishController : MonoBehaviour
         currentState = AIState.Exiting;
     }
 
-    public void OnTriggerEnter2D(Collider2D other)
+    public void OnTriggerStay2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Circle"))
         {
+            if (other.GetComponent<CircleController>().isReady)
+            {
+                Debug.Log("changing color");
+                spriteRenderer.color = other.GetComponent<CircleController>().fishColor;
+                finSpriteRenderer.color = other.GetComponent<CircleController>().fishColor;
+            }
             EnterCircle();
             Debug.Log("Fish Entered Circle!");
         }
