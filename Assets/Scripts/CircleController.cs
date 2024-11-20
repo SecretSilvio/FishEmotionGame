@@ -11,6 +11,7 @@ public class CircleController : MonoBehaviour
     public float goneDuration = 2.0f;
     public float fadeDuration = 1.0f;
     public Color circleColor = Color.blue;
+    public AudioSource gong;
 
     private SpriteRenderer spriteRenderer;
     private float timer = 0.0f;
@@ -81,6 +82,7 @@ public class CircleController : MonoBehaviour
                 if (timer >= fadeDuration)
                 {
                     timer = 0.0f;
+                    gong.Play();
                     currentState = State.Visible;
                 }
                 break;
